@@ -4,9 +4,8 @@ FROM registry.suse.com/bci/bci-base:15.6
 # Install pip
 RUN zypper --non-interactive ref && \
     zypper --non-interactive install \
-    python311 \
-    python311-PyYAML \
-    python3-kubernetes \
+    python312 \
+    python312-pip \
     helm \
     systemd \
     util-linux \
@@ -14,7 +13,7 @@ RUN zypper --non-interactive ref && \
     podman
 
 # Use pip to install kubernetes client
-#RUN python3.12 -m pip install pyyaml kubernetes
+RUN python3.12 -m pip install pyyaml kubernetes
 
 # Set the working directory inside the container
 WORKDIR /app
