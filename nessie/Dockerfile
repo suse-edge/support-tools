@@ -1,19 +1,16 @@
-# Use the SLES BCI (Base Container Image)
-FROM registry.suse.com/bci/bci-base:15.6
+# Use the latest SUSE Linux Enterprise Server (SLES) base image
+FROM registry.suse.com/bci/bci-base:15.7
 
 # Install pip
 RUN zypper --non-interactive ref && \
     zypper --non-interactive install \
-    python312 \
-    python312-pip \
+    python311 \
+    python311-PyYAML \
+    python311-kubernetes \
     helm \
     systemd \
     util-linux \
-    kubernetes1.28-client \
-    podman
-
-# Use pip to install kubernetes client
-RUN python3.12 -m pip install pyyaml kubernetes
+    kubernetes1.29-client
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -22,4 +19,4 @@ WORKDIR /app
 COPY ./nessie.py /app/nessie.py
 
 # Run the script when the container starts
-CMD ["python3.12", "/app/nessie.py"]
+CMD ["python3.11", "/app/nessie.py"]
