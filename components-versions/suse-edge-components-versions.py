@@ -159,59 +159,6 @@ def get_node_info(kubeconfig_path: str) -> Dict:
         logging.error(f"Error retrieving node information: {e}")
         return {}
 
-
-async def main():
-    parser = ArgumentParser(description="Get Helm chart and pod versions.")
-    parser.add_argument("-k",
-                        "--kubeconfig",
-                        help="Path to the kubeconfig file.")
-    parser.add_argument("-c",
-                        "--charts",
-                        help="Comma-separated list of Helm chart names.")
-    parser.add_argument(
-        "-o",
-        "--output",
-        default="json",
-        choices=["json", "table", "none"],
-        help="Output format: json (default), table or none",
-    )
-    parser.add_argument("--get-resources",
-                        action="store_true",
-                        help="Include resources in the output")
-
-    args = parser.parse_args()
-
-    kubeconfig_path = args.kubeconfig if args.kubeconfig else "/kubeconfig"
-    output_format = args.output
-    get_resources = args.get_resources
-
-    chart_names = [
-        name.strip() for name in args.charts.split(",")
-    ] if args.charts is not None else DEFAULT_CHARTS
-
-    # Check if kubeconfig file exists
-    if not os.path.exists(kubeconfig_path):
-        logging.error(f"Error: Kubeconfig file not found at {kubeconfig_path}")
-        sys.exit(1)
-
-    helm_info = await get_helm_chart_info(kubeconfig_path, chart_names, get_resources)
-    node_info = get_node_info(kubeconfig_path)
-
-    edge_version = check_edge_version(node_info, helm_info)
-
-    if output_format == "json":
-        output_data = {"helm_charts": helm_info,
-                       "nodes": node_info, "detected_edge_version": edge_version}
-        if not get_resources:
-            for chart_data in output_data["helm_charts"].values():
-                chart_data.pop("resources", None)
-        print(json.dumps(output_data, indent=2))
-    elif output_format == "table":
-        print_table_output(helm_info, node_info, edge_version, get_resources)
-    elif output_format == "none":
-        print(f"SUSE Edge detected version: {edge_version}")
-
-
 def print_table_output(helm_info: Dict, node_info: Dict, edge_version: Dict, get_resources: bool):
     """
     Prints the cluster information in a table format.
@@ -306,7 +253,7 @@ def print_table_output(helm_info: Dict, node_info: Dict, edge_version: Dict, get
                        stralign="left"))
 
 
-def check_edge_version(node_info, helm_info):
+def check_edge_version(node_info, helm_info, edge_versions_dir):
     # Check for same versions on all the hosts
     kubelet_versions = set(node["kubeletVersion"]
                            for node in node_info.values())
@@ -335,17 +282,24 @@ def check_edge_version(node_info, helm_info):
         print(
             f"Node kernel mismatch! {kernel_versions}, using {kernel_version} as reference")
 
-    # Make pylint happy
-    edge_version: Dict[str, Any] = {}
-    matches = {}
-    notmatches = {}
+    candidates = []
+
+    edge_version = {}
+
     # Try to match the edge version with each one of the released versions
-    for filename in os.listdir("edge-versions"):
+    for filename in os.listdir(edge_versions_dir):
         if filename.endswith(".json"):
-            filepath = os.path.join("edge-versions", filename)
+            filepath = os.path.join(edge_versions_dir, filename)
             try:
                 with open(filepath, 'r') as f:
                     release_data = json.load(f)
+                # Initialize the data
+                edge_version = {"release": "unknown"}
+                matches = {}
+                notmatches = {}
+
+                # Identify the candidate version
+                candidate_version = release_data['Version']
 
                 k3s_version = (release_data['Data']['K3s']['Version'])
                 rke2_version = (release_data['Data']['RKE2']['Version'])
@@ -353,41 +307,56 @@ def check_edge_version(node_info, helm_info):
                 if (k3s_version or rke2_version) == kube_version:
                     # Kube version matches
                     matches['kubeversion'] = kubelet_version
-                    # Time to check the helm charts
-                    for name, info in helm_info.items():
-                        # This is required because chart name != product name
-                        chart_name = sanitize_chart_name(name,release_data['Data'])
-                        # Skip charts not found
-                        if chart_name:
-                            chart_version = info['version']
-                            release_version = release_data['Data'][chart_name]['Helm Chart Version']
-                            if release_version == chart_version:
-                                matches[name] = chart_version
-                            else:
-                                notmatches[name] = chart_version
-                    if notmatches == {}:
-                        # Everything matches
-                        edge_version = {"release":
-                                        release_data['Version']}
-                    elif matches == {}:
-                        # Nothing matches
-                        edge_version = {"relaese":
-                                        "Unknown"}
-                    else:
-                        # Not everything matches
-                        edge_version = {"release":
-                                        f"Posible {release_data['Version']}"}
+                else:
+                    notmatches['kubeversion'] = kubelet_version
 
-                    edge_version["items_matching"] = matches
-                    edge_version["items_not_matching"] = notmatches
+                # Time to check the helm charts
+                for name, info in helm_info.items():
+                    # This is required because chart name != product name
+                    chart_name = sanitize_chart_name(name,release_data['Data'])
+                    # Skip charts not found
+                    if chart_name and release_data['Data'].get(chart_name):
+                        chart_version = info['version']
+                        release_version = release_data['Data'][chart_name]['Helm Chart Version']
+                        if release_version == chart_version:
+                            matches[name] = chart_version
+                        else:
+                            notmatches[name] = chart_version
+                
+                edge_version["items_matching"] = matches
+                edge_version["items_not_matching"] = notmatches
+                
+                if notmatches == {}:
+                    # Everything matches
+                    edge_version["release"] = candidate_version
                     return edge_version
+                elif matches == {}:
+                    # Nothing matches
+                    continue
+                else:
+                    # Posible match
+                    candidates.append({"version": candidate_version, "items_matching": matches, "items_not_matching": notmatches})
 
             except json.JSONDecodeError as e:
                 print(f"Error decoding JSON in {filename}: {e}")
             except Exception as e:
                 print(f"Error processing {filename}: {e}")
-    return {"release": "unknown"}
 
+    # No exact matches, so choose the one with max matches
+    if candidates:
+        # Find and store the entire dictionary item that has the maximum number of matches
+        best_candidate = max(candidates, key=lambda item: len(item["items_matching"]))
+        
+        # Now, access the desired fields from 'best_candidate' dictionary
+        edge_version["release"] = f"Posible {best_candidate['version']}"
+        edge_version["items_matching"] = best_candidate["items_matching"]
+        edge_version["items_not_matching"] = best_candidate["items_not_matching"]
+    else:
+        edge_version["release"] = "unknown"
+        edge_version["items_matching"] = {}
+        edge_version["items_not_matching"] = {}
+
+    return edge_version
 
 def sanitize_chart_name(chart_name,data):
     candidates=CHARTS_AND_PRODUCTS[chart_name]
@@ -398,6 +367,59 @@ def sanitize_chart_name(chart_name,data):
     else:
         return candidates[0]
 
+async def main():
+    parser = ArgumentParser(description="Get Helm chart and pod versions.")
+    parser.add_argument("-k",
+                        "--kubeconfig",
+                        help="Path to the kubeconfig file.")
+    parser.add_argument("-c",
+                        "--charts",
+                        help="Comma-separated list of Helm chart names.")
+    parser.add_argument(
+        "-o",
+        "--output",
+        default="json",
+        choices=["json", "table", "none"],
+        help="Output format: json (default), table or none",
+    )
+    parser.add_argument("--get-resources",
+                        action="store_true",
+                        help="Include resources in the output")
+    parser.add_argument("--versions-dir",
+                        help="Directory storing the json files with Edge versions")
+
+    args = parser.parse_args()
+
+    kubeconfig_path = args.kubeconfig if args.kubeconfig else "/kubeconfig"
+    output_format = args.output
+    get_resources = args.get_resources
+    edge_versions_dir = args.versions_dir if args.versions_dir else "/usr/share/suse-edge-components-versions"
+
+    chart_names = [
+        name.strip() for name in args.charts.split(",")
+    ] if args.charts is not None else DEFAULT_CHARTS
+
+    # Check if kubeconfig file exists
+    if not os.path.exists(kubeconfig_path):
+        logging.error(f"Error: Kubeconfig file not found at {kubeconfig_path}")
+        sys.exit(1)
+
+    helm_info = await get_helm_chart_info(kubeconfig_path, chart_names, get_resources)
+    node_info = get_node_info(kubeconfig_path)
+
+    edge_version = check_edge_version(node_info, helm_info, edge_versions_dir)
+
+    if output_format == "json":
+        output_data = {"helm_charts": helm_info,
+                       "nodes": node_info, "detected_edge_version": edge_version}
+        if not get_resources:
+            for chart_data in output_data["helm_charts"].values():
+                chart_data.pop("resources", None)
+        print(json.dumps(output_data, indent=2))
+    elif output_format == "table":
+        print_table_output(helm_info, node_info, edge_version, get_resources)
+    elif output_format == "none":
+        print(f"SUSE Edge detected version: {edge_version}")
 
 if __name__ == "__main__":
     asyncio.run(main())
