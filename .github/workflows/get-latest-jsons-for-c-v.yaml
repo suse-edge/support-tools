@@ -73,7 +73,7 @@ jobs:
           # The new branch name for the pull request.
           # - If a PR from this branch is already open, it will be updated.
           # - If no PR is open, a new one will be created.
-          head: sync/json-updates-for-components-versions
+          branch: sync/json-updates-for-components-versions
 
           # Title of the pull request
           title: "Sync JSON data for components-versions"
