@@ -51,7 +51,7 @@ jobs:
             
             curl -s --retry 5 --retry-max-time 120 --retry-all-errors -o "$filepath" "$url"
             
-          done <<< "$json_urls"
+          done <<< "$JSON_URLS"
 
           # Check if the working directory is dirty after downloads
           if git status --porcelain "$TARGET_DIR" | grep -q .; then          
