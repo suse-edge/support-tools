@@ -1,6 +1,7 @@
 {
   "Version": "3.2.0",
-  "URL": "https://documentation.suse.com/suse-edge/3.2/html/edge/id-release-notes.html#id-components-versions",
+  "URL": "https://documentation.suse.com/suse-edge/3.2/html/edge/id-release-notes.html#id-component-versions-2",
+  "AvailabilityDate": "20th January 2025",
   "Data": {
     "SUSE Linux Micro": {
       "Version": "6.0 (latest)",
@@ -44,7 +45,7 @@
       "Artifact Location (URL/Image)": "<p>registry.suse.com/edge/3.2/metal3-chart:302.0.0_up0.9.0<br/>\nregistry.suse.com/edge/3.2/baremetal-operator:0.8.0<br/>\nregistry.suse.com/edge/3.2/ironic:26.1.2.0<br/>\nregistry.suse.com/edge/3.2/ironic-ipa-downloader:3.0.0<br/>\nregistry.suse.com/edge/3.2/kube-rbac-proxy:0.18.1<br/>\nregistry.suse.com/edge/mariadb:10.6.15.1</p>"
     },
     "MetalLB": {
-      "Version": "0.14.9",
+      "Version": "0.14.8",
       "Helm Chart Version": "302.0.0+up0.14.9",
       "Artifact Location (URL/Image)": "<p>registry.suse.com/edge/3.2/metallb-chart:302.0.0_up0.14.9<br/>\nregistry.suse.com/edge/3.2/metallb-controller:v0.14.8<br/>\nregistry.suse.com/edge/3.2/metallb-speaker:v0.14.8<br/>\nregistry.suse.com/edge/3.2/frr:8.4<br/>\nregistry.suse.com/edge/3.2/frr-k8s:v0.0.14</p>"
     },
