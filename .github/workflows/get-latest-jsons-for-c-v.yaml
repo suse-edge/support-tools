@@ -25,7 +25,8 @@ jobs:
           # Exit immediately if a command exits with a non-zero status
           set -euo pipefail
 
-          SUPPORT_MATRIX="https://documentation.suse.com/suse-edge/support-matrix/html/support-matrix/index.html"
+          BASE_URL="https://documentation.suse.com"
+          SUPPORT_MATRIX="${BASE_URL}/suse-edge/support-matrix/html/support-matrix/index.html"
           TARGET_DIR="components-versions/edge-versions"
 
           mkdir -p "$TARGET_DIR"
