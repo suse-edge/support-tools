@@ -1,0 +1,86 @@
+name: Sync Support Matrix JSON files
+
+on:
+  schedule:
+    # Run every hour at minute 53 because YOLO
+    - cron: "53 * * * *"
+
+  # Allow manual triggering just in case
+  workflow_dispatch:
+
+jobs:
+  sync-json-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sync JSON files and prepare commit
+        id: sync # Give this step an ID to access its outputs
+        run: |
+          # Exit immediately if a command exits with a non-zero status
+          set -euo pipefail
+
+          SUPPORT_MATRIX="https://documentation.suse.com/suse-edge/support-matrix/html/support-matrix/index.html"
+          TARGET_DIR="components-versions/edge-versions"
+
+          mkdir -p "$TARGET_DIR"
+
+          # Get the html and filter the JSON files URLs
+          # Extra curl options because I've been bitten in the past
+          JSON_URLS=$(curl -s --retry 5 --retry-max-time 120 --retry-all-errors "${SUPPORT_MATRIX}" | \
+            grep -oP 'href="/external-tree/en-us/support-matrix-docs/public/[^"]+\.json"' | \
+            sed -nE 's/.*href="([^"]+)".*/\1/p' | \
+            sed -E "s|^|${BASE_URL}|")
+
+          if [ -z "${JSON_URLS}" ]; then
+            echo "No JSON URLs found on the page."
+            # We'll allow the job to succeed but signal no PR is needed.
+            echo "PR_NEEDED=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          while IFS= read -r url; do
+            filename=$(basename "$url")
+            filepath="$TARGET_DIR/$filename"
+            
+            curl -s --retry 5 --retry-max-time 120 --retry-all-errors -o "$filepath" "$url"
+            
+          done <<< "$json_urls"
+
+          # Check if the working directory is dirty after downloads
+          if git status --porcelain "$TARGET_DIR" | grep -q .; then          
+            # Set an output variable to indicate that a PR should be created
+            echo "PR_NEEDED=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No changes detected. Skipping PR creation."
+            echo "PR_NEEDED=false" >> "$GITHUB_OUTPUT" # Signal no PR needed
+          fi
+
+      - name: Create Pull Request
+        # This step only runs if 'PR_NEEDED' output from the previous step is 'true'
+        if: steps.sync.outputs.PR_NEEDED == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+
+          # The new branch name for the pull request.
+          # - If a PR from this branch is already open, it will be updated.
+          # - If no PR is open, a new one will be created.
+          head: sync/json-updates-for-components-versions
+
+          # Title of the pull request
+          title: "Sync JSON data for components-versions"
+
+          # Body of the pull request (description)
+          body: |
+            This PR automatically syncs the latest JSON data from the SUSE Edge Support Matrix documentation.
+
+            This is an automated sync running hourly. Please review the changes.
+
+          delete-branch: true
