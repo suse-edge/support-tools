@@ -27,7 +27,7 @@ jobs:
 
           BASE_URL="https://documentation.suse.com"
           SUPPORT_MATRIX="${BASE_URL}/suse-edge/support-matrix/html/support-matrix/index.html"
-          TARGET_DIR="components-versions/edge-versions"
+          TARGET_DIR="components-versions/components_versions/data"
 
           mkdir -p "$TARGET_DIR"
 
