@@ -17,3 +17,4 @@ A repository that contains scripts, tools and other assets from the SUSE Edge su
 | Tool | Description |
 | - | - |
 | [components-versions](components-versions) | A tool to retrieve version information for Helm charts, pods, and nodes in a SUSE Edge Kubernetes cluster. |
+| [nessie](nessie) | A tool to collect logs and configuration data from a SUSE Edge Kubernetes cluster. |
