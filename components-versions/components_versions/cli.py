@@ -6,6 +6,7 @@ import os
 import sys
 from argparse import ArgumentParser
 from .core import check_edge_version, get_helm_chart_info, print_table_output, get_node_info
+from components_versions import __version__
 
 # Configure logging
 logging.basicConfig(level=logging.WARN,
@@ -44,14 +45,24 @@ async def _async_main():
         choices=["json", "table", "none"],
         help="Output format: json (default), table or none",
     )
-    parser.add_argument("--get-resources",
+    parser.add_argument("-r",
+                        "--get-resources",
                         action="store_true",
                         help="Include resources in the output")
-    parser.add_argument("--versions-dir",
+    parser.add_argument("-d",
+                        "--versions-dir",
                         help="Directory storing the json files with Edge versions")
+
+    parser.add_argument("-v",
+                        "--version",
+                        action="store_true",
+                        help="Show program version")
 
     args = parser.parse_args()
 
+    if args.version:
+        print(__version__)
+        sys.exit()
     kubeconfig_path = args.kubeconfig if args.kubeconfig else DEFAULT_KUBECONFIG
     output_format = args.output
     get_resources = args.get_resources
