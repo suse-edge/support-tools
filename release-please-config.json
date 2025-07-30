@@ -4,7 +4,6 @@
   "packages": {
     "components-versions": {
       "release-type": "python",
-      "changelog-path": "components-versions/CHANGELOG.md",
       "package-json-path": "components-versions/pyproject.toml",
       "changelog-sections": [
         { "type": "feat", "section": "Features" },
