@@ -1,7 +1,7 @@
 {
-  "Version": "3.3.1",
-  "URL": "https://documentation.suse.com/suse-edge/3.3/html/edge/id-release-notes.html#id-component-versions-2",
-  "AvailabilityDate": "13th June 2025",
+  "Version": "3.3.2",
+  "URL": "https://documentation.suse.com/suse-edge/3.3/html/edge/id-release-notes.html#id-component-versions",
+  "AvailabilityDate": "20th August 2025",
   "Data": {
     "SUSE Linux Micro": {
       "Version": "6.1 (latest)",
@@ -12,42 +12,42 @@
       "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://www.suse.com/download/suse-manager/\" target=\"_blank\">SUSE Multi-Linux Manager Download Page</a></p>"
     },
     "K3s": {
-      "Version": "1.32.4",
-      "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://github.com/k3s-io/k3s/releases/tag/v1.32.4%2Bk3s1\" target=\"_blank\">Upstream K3s Release</a></p>"
+      "Version": "1.32.5",
+      "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://github.com/k3s-io/k3s/releases/tag/v1.32.5%2Bk3s1\" target=\"_blank\">Upstream K3s Release</a></p>"
     },
     "RKE2": {
-      "Version": "1.32.4",
-      "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://github.com/rancher/rke2/releases/tag/v1.32.4%2Brke2r1\" target=\"_blank\">Upstream RKE2 Release</a></p>"
+      "Version": "1.32.5",
+      "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://github.com/rancher/rke2/releases/tag/v1.32.5%2Brke2r1\" target=\"_blank\">Upstream RKE2 Release</a></p>"
     },
     "SUSE Rancher Prime": {
-      "Version": "2.11.2",
-      "Helm Chart Version": "2.11.2",
-      "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://charts.rancher.com/server-charts/prime/index.yaml\" target=\"_blank\">Rancher Prime Helm Repository</a><br/>\n<a class=\"link\" href=\"https://github.com/rancher/rancher/releases/download/v2.11.1/rancher-images.txt\" target=\"_blank\">Rancher 2.11.1 Container Images</a></p>"
+      "Version": "2.11.3",
+      "Helm Chart Version": "2.11.3",
+      "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://charts.rancher.com/server-charts/prime/index.yaml\" target=\"_blank\">Rancher Prime Helm Repository</a><br/>\n<a class=\"link\" href=\"https://github.com/rancher/rancher/releases/download/v2.11.3/rancher-images.txt\" target=\"_blank\">Rancher 2.11.3 Container Images</a></p>"
     },
     "SUSE Storage": {
-      "Version": "1.8.1",
-      "Helm Chart Version": "106.2.0+up1.8.1",
-      "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://charts.rancher.io/index.yaml\" target=\"_blank\">Rancher Charts Helm Repository</a><br/>\nregistry.suse.com/rancher/mirrored-longhornio-csi-attacher:v4.8.1<br/>\nregistry.suse.com/rancher/mirrored-longhornio-csi-provisioner:v5.2.0<br/>\nregistry.suse.com/rancher/mirrored-longhornio-csi-resizer:v1.13.2<br/>\nregistry.suse.com/rancher/mirrored-longhornio-csi-snapshotter:v8.2.0<br/>\nregistry.suse.com/rancher/mirrored-longhornio-csi-node-driver-registrar:v2.13.0<br/>\nregistry.suse.com/rancher/mirrored-longhornio-livenessprobe:v2.15.0<br/>\nregistry.suse.com/rancher/mirrored-longhornio-backing-image-manager:v1.8.1<br/>\nregistry.suse.com/rancher/mirrored-longhornio-longhorn-engine:v1.8.1<br/>\nregistry.suse.com/rancher/mirrored-longhornio-longhorn-instance-manager:v1.8.1<br/>\nregistry.suse.com/rancher/mirrored-longhornio-longhorn-manager:v1.8.1<br/>\nregistry.suse.com/rancher/mirrored-longhornio-longhorn-share-manager:v1.8.1<br/>\nregistry.suse.com/rancher/mirrored-longhornio-longhorn-ui:v1.8.1<br/>\nregistry.suse.com/rancher/mirrored-longhornio-support-bundle-kit:v0.0.52<br/>\nregistry.suse.com/rancher/mirrored-longhornio-longhorn-cli:v1.8.1<br/></p>"
+      "Version": "1.8.2",
+      "Helm Chart Version": "106.2.1+up1.8.2",
+      "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://charts.rancher.io/index.yaml\" target=\"_blank\">Rancher Charts Helm Repository</a><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-csi-attacher:v4.9.0</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-csi-provisioner:v5.3.0</strong></span></span><br/>\nregistry.suse.com/rancher/mirrored-longhornio-csi-resizer:v1.13.2<br/>\nregistry.suse.com/rancher/mirrored-longhornio-csi-snapshotter:v8.2.0<br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-csi-node-driver-registrar:v2.14.0</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-livenessprobe:v2.16.0</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-backing-image-manager:v1.8.2</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-longhorn-engine:v1.8.2</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-longhorn-instance-manager:v1.8.2</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-longhorn-manager:v1.8.2</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-longhorn-share-manager:v1.8.2</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-longhorn-ui:v1.8.2</strong></span></span><br/>\nregistry.suse.com/rancher/mirrored-longhornio-support-bundle-kit:v0.0.52<br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/mirrored-longhornio-longhorn-cli:v1.8.2</strong></span></span><br/></p>"
     },
     "SUSE Security": {
-      "Version": "5.4.4",
-      "Helm Chart Version": "106.0.1+up2.8.6",
-      "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://charts.rancher.io/index.yaml\" target=\"_blank\">Rancher Charts Helm Repository</a><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/neuvector-controller:5.4.4</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/neuvector-enforcer:5.4.4</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/neuvector-manager:5.4.4</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/neuvector-compliance-config:1.0.5</strong></span></span><br/>\nregistry.suse.com/rancher/neuvector-registry-adapter:0.1.6<br/>\nregistry.suse.com/rancher/neuvector-scanner:6<br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/neuvector-updater:0.0.3</strong></span></span></p>"
+      "Version": "5.4.5",
+      "Helm Chart Version": "106.0.2+up2.8.7",
+      "Artifact Location (URL/Image)": "<p><a class=\"link\" href=\"https://charts.rancher.io/index.yaml\" target=\"_blank\">Rancher Charts Helm Repository</a><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/neuvector-controller:5.4.5</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/neuvector-enforcer:5.4.5</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/neuvector-manager:5.4.5</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/neuvector-compliance-config:1.0.6</strong></span></span><br/>\nregistry.suse.com/rancher/neuvector-registry-adapter:0.1.6<br/>\nregistry.suse.com/rancher/neuvector-scanner:6<br/>\nregistry.suse.com/rancher/neuvector-updater:0.0.3</p>"
     },
     "Rancher Turtles (CAPI)": {
-      "Version": "0.20.0",
-      "Helm Chart Version": "303.0.4+up0.20.0",
-      "Artifact Location (URL/Image)": "<p><span><span class=\"emphasis\"><strong>registry.suse.com/edge/charts/rancher-turtles:303.0.3_up0.20.0</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.rancher.com/rancher/rancher/turtles:v0.20.0</strong></span></span><br/>\nregistry.rancher.com/rancher/cluster-api-operator:v0.17.0<br/>\nregistry.rancher.com/rancher/cluster-api-metal3-controller:v1.9.3<br/>\nregistry.rancher.com/rancher/cluster-api-metal3-ipam-controller:v1.9.4<br/>\nregistry.suse.com/rancher/cluster-api-controller:v1.9.5<br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/cluster-api-provider-rke2-bootstrap:v0.16.1</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/cluster-api-provider-rke2-controlplane:v0.16.1</strong></span></span></p>"
+      "Version": "0.21.0",
+      "Helm Chart Version": "303.0.5+up0.21.0",
+      "Artifact Location (URL/Image)": "<p><span><span class=\"emphasis\"><strong>registry.suse.com/edge/charts/rancher-turtles:303.0.5_up0.21.0</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.rancher.com/rancher/rancher/turtles:v0.21.0</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.rancher.com/rancher/cluster-api-operator:v0.18.1</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.rancher.com/rancher/cluster-api-metal3-controller:v1.9.4</strong></span></span><br/>\nregistry.rancher.com/rancher/cluster-api-metal3-ipam-controller:v1.9.4<br/>\nregistry.suse.com/rancher/cluster-api-controller:v1.9.5<br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/cluster-api-provider-rke2-bootstrap:v0.18.0</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/rancher/cluster-api-provider-rke2-controlplane:v0.18.0</strong></span></span></p>"
     },
     "Rancher Turtles Airgap Resources": {
-      "Version": "0.20.0",
-      "Helm Chart Version": "303.0.4+up0.20.0",
-      "Artifact Location (URL/Image)": "<p><span><span class=\"emphasis\"><strong>registry.suse.com/edge/charts/rancher-turtles-airgap-resources:303.0.3_up0.20.0</strong></span></span></p>"
+      "Version": "0.21.0",
+      "Helm Chart Version": "303.0.5+up0.21.0",
+      "Artifact Location (URL/Image)": "<p><span><span class=\"emphasis\"><strong>registry.suse.com/edge/charts/rancher-turtles-airgap-resources:303.0.5_up0.21.0</strong></span></span></p>"
     },
     "Metal3": {
       "Version": "0.11.5",
       "Helm Chart Version": "303.0.7+up0.11.5",
-      "Artifact Location (URL/Image)": "<p><span><span class=\"emphasis\"><strong>registry.suse.com/edge/charts/metal3:303.0.7_up0.11.5</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/edge/3.3/baremetal-operator:0.9.1.1</strong></span></span><br/>\nregistry.suse.com/edge/3.3/ironic:26.1.2.4<br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/edge/3.3/ironic-ipa-downloader:3.0.7</strong></span></span><br/>\nregistry.suse.com/edge/mariadb:10.6.15.1</p>"
+      "Artifact Location (URL/Image)": "<p>registry.suse.com/edge/charts/metal3:303.0.7_up0.11.5<br/>\nregistry.suse.com/edge/3.3/baremetal-operator:0.9.1.1<br/>\nregistry.suse.com/edge/3.3/ironic:26.1.2.4<br/>\nregistry.suse.com/edge/3.3/ironic-ipa-downloader:3.0.7<br/>\nregistry.suse.com/edge/mariadb:10.6.15.1</p>"
     },
     "MetalLB": {
       "Version": "0.14.9",
@@ -66,7 +66,7 @@
     },
     "Edge Image Builder": {
       "Version": "1.2.1",
-      "Artifact Location (URL/Image)": "<p><span><span class=\"emphasis\"><strong>registry.suse.com/edge/3.3/edge-image-builder:1.2.1</strong></span></span></p>"
+      "Artifact Location (URL/Image)": "<p>registry.suse.com/edge/3.3/edge-image-builder:1.2.1</p>"
     },
     "NM Configurator": {
       "Version": "0.3.3",
@@ -110,7 +110,7 @@
     "Upgrade Controller": {
       "Version": "0.1.1",
       "Helm Chart Version": "303.0.1+up0.1.1",
-      "Artifact Location (URL/Image)": "<p><span><span class=\"emphasis\"><strong>registry.suse.com/edge/charts/upgrade-controller:303.0.1_up0.1.1</strong></span></span><br/>\nregistry.suse.com/edge/3.3/upgrade-controller:0.1.1<br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/edge/3.3/kubectl:1.32.4</strong></span></span><br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/edge/3.3/release-manifest:3.3.1</strong></span></span></p>"
+      "Artifact Location (URL/Image)": "<p>registry.suse.com/edge/charts/upgrade-controller:303.0.1_up0.1.1<br/>\nregistry.suse.com/edge/3.3/upgrade-controller:0.1.1<br/>\nregistry.suse.com/edge/3.3/kubectl:1.32.4<br/>\n<span><span class=\"emphasis\"><strong>registry.suse.com/edge/3.3/release-manifest:3.3.2</strong></span></span></p>"
     },
     "Kiwi Builder": {
       "Version": "10.2.12.0",
