@@ -76,7 +76,10 @@ jobs:
           branch: sync/json-updates-for-components-versions
 
           # Title of the pull request
-          title: "feat: Sync JSON data for components-versions"
+          # NOTE(edu): We use fix instead of feat to bump the patch version instead the minor as per
+          # release-please instructions
+          # https://github.com/googleapis/release-please?tab=readme-ov-file#how-should-i-write-my-commits
+          title: "fix: Sync JSON data for components-versions"
 
           # Body of the pull request (description)
           body: |
