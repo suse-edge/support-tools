@@ -76,7 +76,7 @@ jobs:
           branch: sync/json-updates-for-components-versions
 
           # Title of the pull request
-          title: "Sync JSON data for components-versions"
+          title: "feat: Sync JSON data for components-versions"
 
           # Body of the pull request (description)
           body: |
