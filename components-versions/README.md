@@ -9,48 +9,48 @@ This tool retrieves version information for Helm charts, pods, and nodes in a SU
 - Retrieves node information (architecture, kernel version, kubelet version, operating system, OS image).
 - Outputs the information in JSON or table format.
 - Detects the Edge version.
+- Easy to use container image based
 
 ## Usage
 
 0.  **Prerequisites:**
 
-    - python3
-    - helm
+    - podman
 
-    Ideally a virtualenv should be created:
-
-    ```bash
-    python3 -m venv .venv
-    source .venv/bin/activate
-    ```
-
-1.  **Install dependencies:**
+1.  **Run the container image:**
 
     ```bash
-    pip install -r requirements.txt
+    podman run -it --rm -v /path/to/mykubeconfig:/kubeconfig registry.opensuse.org/isv/suse/edge/factory/images/suse-edge-components-versions:0.1.0-3.1
     ```
 
-2.  **Run the script:**
+    If running the container directly on the host, `--net=host` is needed because the kubeconfig probably will point to 127.0.0.1:
 
     ```bash
-    python suse-edge-components-versions.py -k <kubeconfig_path> -c <chart_names> -o <output_format> --versions-dir edge-versions/
+    podman run -it --rm --net=host -v /path/to/mykubeconfig:/kubeconfig registry.opensuse.org/isv/suse/edge/factory/images/suse-edge-components-versions:0.1.0-3.1
     ```
 
-    - `-k`: Path to the kubeconfig file (optional). If not provided, defaults to `/kubeconfig`
-    - `-c`: Comma-separated list of Helm chart names (optional). If not provided, defaults to `metallb, endpoint-copier-operator, 
-rancher, longhorn, cdi,
-kubevirt, neuvector, elemental-operator,
-sriov-network-operator, akri, metal3, system-upgrade-controller & rancher-turtles`.
-    - `-o`: Output format: `json` (default) or `table`.
-    - `--get-resources`: Get (and print) resources created by the helm chart.
-    - `-h`: Show help.
-    - `--versions-dir`: Directory storing the json files with Edge versions
+There are a few optional flags like:
 
-**Example:**
+    ```bash
+    podman run -it --rm registry.opensuse.org/isv/suse/edge/factory/images/suse-edge-components-versions:0.1.0-3.2 -h
+    usage: suse-edge-components-versions [-h] [-k KUBECONFIG] [-c CHARTS] [-o {json,table,none}] [-r]
+                                        [-d VERSIONS_DIR] [-v]
 
-```bash
-python suse-edge-components-versions.py -k /path/to/kubeconfig -c cert-manager,metallb -o table --versions-dir edge-versions/
-```
+    Get Helm chart and pod versions.
+
+    options:
+      -h, --help            show this help message and exit
+      -k KUBECONFIG, --kubeconfig KUBECONFIG
+                            Path to the kubeconfig file.
+      -c CHARTS, --charts CHARTS
+                            Comma-separated list of Helm chart names.
+      -o {json,table,none}, --output {json,table,none}
+                            Output format: json (default), table or none
+      -r, --get-resources   Include resources in the output
+      -d VERSIONS_DIR, --versions-dir VERSIONS_DIR
+                            Directory storing the json files with Edge versions
+      -v, --version         Show program version
+      ```
 
 ## Example output
 
