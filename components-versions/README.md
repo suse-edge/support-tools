@@ -20,19 +20,19 @@ This tool retrieves version information for Helm charts, pods, and nodes in a SU
 1.  **Run the container image:**
 
     ```bash
-    podman run -it --rm -v /path/to/mykubeconfig:/kubeconfig registry.opensuse.org/isv/suse/edge/factory/images/suse-edge-components-versions:0.1.0-3.1
+    podman run -it --rm -v /path/to/mykubeconfig:/kubeconfig registry.opensuse.org/isv/suse/edge/factory/images/suse-edge-components-versions:0.1.1
     ```
 
     If running the container directly on the host, `--net=host` is needed because the kubeconfig probably will point to 127.0.0.1:
 
     ```bash
-    podman run -it --rm --net=host -v /path/to/mykubeconfig:/kubeconfig registry.opensuse.org/isv/suse/edge/factory/images/suse-edge-components-versions:0.1.0-3.1
+    podman run -it --rm --net=host -v /path/to/mykubeconfig:/kubeconfig registry.opensuse.org/isv/suse/edge/factory/images/suse-edge-components-versions:0.1.1
     ```
 
 There are a few optional flags like:
 
     ```bash
-    podman run -it --rm registry.opensuse.org/isv/suse/edge/factory/images/suse-edge-components-versions:0.1.0-3.2 -h
+    podman run -it --rm registry.opensuse.org/isv/suse/edge/factory/images/suse-edge-components-versions:0.1.1 -h
     usage: suse-edge-components-versions [-h] [-k KUBECONFIG] [-c CHARTS] [-o {json,table,none}] [-r]
                                         [-d VERSIONS_DIR] [-v]
 
