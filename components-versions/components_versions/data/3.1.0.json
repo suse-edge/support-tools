@@ -2,6 +2,9 @@
   "Version": "3.1.0",
   "URL": "https://documentation.suse.com/suse-edge/3.1/html/edge/id-release-notes.html#id-components-versions-3",
   "AvailabilityDate": "11th October 2024",
+  "FullSupportEndDate": null,
+  "MaintenanceSupportEndDate": null,
+  "EOLDate": null,
   "Data": {
     "SLE Micro": {
       "Version": "6.0 (latest)",

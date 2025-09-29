@@ -2,6 +2,9 @@
   "Version": "3.2.0",
   "URL": "https://documentation.suse.com/suse-edge/3.2/html/edge/id-release-notes.html#id-component-versions-2",
   "AvailabilityDate": "20th January 2025",
+  "FullSupportEndDate": null,
+  "MaintenanceSupportEndDate": null,
+  "EOLDate": null,
   "Data": {
     "SUSE Linux Micro": {
       "Version": "6.0 (latest)",
