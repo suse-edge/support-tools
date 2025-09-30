@@ -1,27 +1,12 @@
 # components_versions/core.py
-import json
 import logging
 import os
+import yaml
 from typing import Dict, List
 
 from kubernetes import client, config
 from pyhelm3 import Client, Command
 from tabulate import tabulate
-
-CHARTS_AND_PRODUCTS = {"longhorn": ["SUSE Storage","Longhorn"],
-                       "metal3": ["Metal3"],
-                       "metallb": ["MetalLB"],
-                       "endpoint-copier-operator": ["Endpoint Copier Operator"],
-                       "elemental-operator": ["Elemental"],
-                       "rancher": ["SUSE Rancher Prime","Rancher Prime"],
-                       "cdi": ["Containerized Data Importer"],
-                       "kubevirt": ["KubeVirt"],
-                       "neuvector": ["SUSE Security","NeuVector"],
-                       "sriov-network-operator": ["SR-IOV Network Operator"],
-                       "akri": ["Akri (tech-preview)"],
-                       "rancher-turtles": ["Rancher Turtles (CAPI)"],
-                       "system-upgrade-controller": ["System Upgrade Controller"],
-                       "upgrade-controller": ["Upgrade Controller"]}
 
 async def get_helm_chart_info(kubeconfig_path: str,
                               chart_names: List[str],
@@ -240,10 +225,6 @@ def check_edge_version(node_info, helm_info, edge_versions_dir):
     if len(kubelet_versions) != 1:
         print(
             f"Kubelet Versions mismatch! {kubelet_versions}, using {kubelet_version} as reference")
-    # Try to match the distro
-    # kube_distro = re.search(r"\+(k3s|rke2)r\d+", kubelet_version).group(1)
-    # And version
-    kube_version = kubelet_version.split("+")[0].split("v")[1]
 
     # Do the same for osImage
     os_images = set(node["osImage"] for node in node_info.values())
@@ -265,23 +246,23 @@ def check_edge_version(node_info, helm_info, edge_versions_dir):
 
     # Try to match the edge version with each one of the released versions
     for filename in os.listdir(edge_versions_dir):
-        if filename.endswith(".json"):
+        if filename.endswith(".yaml"):
             filepath = os.path.join(edge_versions_dir, filename)
             try:
                 with open(filepath, 'r') as f:
-                    release_data = json.load(f)
+                    release_data = yaml.safe_load(f)
                 # Initialize the data
                 edge_version = {"release": "unknown"}
                 matches = {}
                 notmatches = {}
 
                 # Identify the candidate version
-                candidate_version = release_data['Version']
+                candidate_version = release_data['spec']['releaseVersion']
 
-                k3s_version = (release_data['Data']['K3s']['Version'])
-                rke2_version = (release_data['Data']['RKE2']['Version'])
+                k3s_version = (release_data['spec']['components']['kubernetes']['k3s']['version'])
+                rke2_version = (release_data['spec']['components']['kubernetes']['rke2']['version'])
 
-                if (k3s_version or rke2_version) == kube_version:
+                if kubelet_version in (k3s_version, rke2_version):
                     # Kube version matches
                     matches['kubeversion'] = kubelet_version
                 else:
@@ -289,16 +270,17 @@ def check_edge_version(node_info, helm_info, edge_versions_dir):
 
                 # Time to check the helm charts
                 for name, info in helm_info.items():
-                    # This is required because chart name != product name
-                    chart_name = sanitize_chart_name(name,release_data['Data'])
                     # Skip charts not found
-                    if chart_name and release_data['Data'].get(chart_name):
-                        chart_version = info['version']
-                        release_version = release_data['Data'][chart_name]['Helm Chart Version']
-                        if release_version == chart_version:
-                            matches[name] = chart_version
-                        else:
-                            notmatches[name] = chart_version
+                    for chart in release_data['spec']['components']['workloads']['helm']:
+                        # Name matches, check versions
+                        if chart['releaseName'] == name:
+                            chart_version = info['version']
+                            release_version = chart['version']
+                            if release_version == chart_version:
+                                matches[name] = chart_version
+                            else:
+                                # Chart matches but no version
+                                notmatches[name] = chart_version
                 
                 edge_version["items_matching"] = matches
                 edge_version["items_not_matching"] = notmatches
@@ -313,11 +295,27 @@ def check_edge_version(node_info, helm_info, edge_versions_dir):
                 else:
                     # Posible match
                     candidates.append({"version": candidate_version, "items_matching": matches, "items_not_matching": notmatches})
+            
+            # Handle errors opening the file
+            except FileNotFoundError:
+                print(f"ERROR: The file '{filepath}' was not found.")
+                return None
+            except PermissionError:
+                print(f"ERROR: Permission denied to read file '{filepath}'.")
+                return None
+            except OSError as e:
+                # Catch other general OS errors
+                print(f"ERROR: An OS error occurred while opening the file: {e}")
+                return None
 
-            except json.JSONDecodeError as e:
-                print(f"Error decoding JSON in {filename}: {e}")
-            except Exception as e:
-                print(f"Error processing {filename}: {e}")
+            # Handle errors related to YAML syntax/parsing
+            except yaml.YAMLError as exc:
+                print(f"ERROR: Invalid YAML syntax found in '{filepath}'.")
+                # PyYAML exceptions often include a problem_mark with line/column info
+                if hasattr(exc, 'problem_mark'):
+                    mark = exc.problem_mark
+                    print(f"Error location: Line {mark.line + 1}, Column {mark.column + 1}")
+                return None
 
     # No exact matches, so choose the one with max matches
     if candidates:
@@ -334,12 +332,3 @@ def check_edge_version(node_info, helm_info, edge_versions_dir):
         edge_version["items_not_matching"] = {}
 
     return edge_version
-
-def sanitize_chart_name(chart_name,data):
-    candidates=CHARTS_AND_PRODUCTS[chart_name]
-    if len(candidates) > 1:
-        for candidate in candidates:
-            if candidate in data:
-                return candidate
-    else:
-        return candidates[0]
