@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/suse-edge/support-tools/compare/components-versions-v0.2.0...components-versions-v0.2.1) (2025-09-30)
+
+
+### Bug Fixes
+
+* Fixed pyproject with proper yaml package data ([#30](https://github.com/suse-edge/support-tools/issues/30)) ([0269eee](https://github.com/suse-edge/support-tools/commit/0269eeeac953f2dcac002cd52cae9336a295b2ba))
+
 ## [0.2.0](https://github.com/suse-edge/support-tools/compare/components-versions-v0.1.1...components-versions-v0.2.0) (2025-09-30)
 
 
