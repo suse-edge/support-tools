@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
 authors = [
-  { name = "Eduardo Minguez", email = "eminguez@suse.com" },
+  { name = "Eduardo Minguez", email = "eduardo.minguez@suse.com" },
 ]
 keywords = ["suse", "edge", "kubernetes", "versions", "support"]
 classifiers = [
@@ -39,4 +39,4 @@ build-backend = "setuptools.build_meta"
 find = {} 
 
 [tool.setuptools.package-data]
-"components_versions" = ["data/*.json"] 
+"components_versions" = ["data/*.yaml"] 
