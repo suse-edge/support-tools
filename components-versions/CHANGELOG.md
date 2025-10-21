@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/suse-edge/support-tools/compare/components-versions-v0.2.1...components-versions-v0.2.2) (2025-10-21)
+
+
+### Bug Fixes
+
+* Include release manifest for 3.4.1 ([81e8fb5](https://github.com/suse-edge/support-tools/commit/81e8fb5bf729488c187a5f32fa5320d6b7c9c8c9))
+
 ## [0.2.1](https://github.com/suse-edge/support-tools/compare/components-versions-v0.2.0...components-versions-v0.2.1) (2025-09-30)
 
 
