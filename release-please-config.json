@@ -1,0 +1,19 @@
+{
+  "bootstrap-sha": "main",
+  "release-type": "simple",
+  "packages": {
+    "components-versions": {
+      "release-type": "python",
+      "package-json-path": "components-versions/pyproject.toml",
+      "changelog-sections": [
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug Fixes" },
+        { "type": "docs", "section": "Documentation" },
+        { "type": "chore", "section": "Chores", "hidden": true }
+      ],
+      "component": "components-versions",
+      "include-component-in-tag": true,
+      "separate-pull-requests": true
+    }
+  }
+}

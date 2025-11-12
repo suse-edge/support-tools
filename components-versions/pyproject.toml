@@ -1,0 +1,42 @@
+[project]
+name = "suse-edge-components-versions"
+version = "0.2.2"
+description = "A tool to gather and display component versions for SUSE Edge products."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Eduardo Minguez", email = "eduardo.minguez@suse.com" },
+]
+keywords = ["suse", "edge", "kubernetes", "versions", "support"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: System :: Installation/Setup",
+    "Topic :: Utilities"
+]
+
+dependencies = [
+    "kubernetes>=32.0.1",
+    "pyhelm3>=0.4.0",
+    "tabulate>=0.9.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/suse-edge/support-tools/tree/main/components-versions"
+"Bug Tracker" = "https://github.com/suse-edge/support-tools/issues"
+
+[project.scripts]
+components-versions = "components_versions.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"] # Build backend for packaging
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages]
+# Automatically discover packages in the current directory
+find = {} 
+
+[tool.setuptools.package-data]
+"components_versions" = ["data/*.yaml"] 
