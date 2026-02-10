@@ -10,7 +10,7 @@ on:
 
 jobs:
   code-checks:
-    uses: ./.github/workflows/nessie-code-checks.yaml
+    uses: ./.github/workflows/nessie-syntax-validation.yaml
 
   release:
     needs: [ code-checks ]
