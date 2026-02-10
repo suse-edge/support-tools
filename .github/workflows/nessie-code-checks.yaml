@@ -1,0 +1,54 @@
+name: "Nessie: Python Checks"
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'nessie/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'nessie/**'
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  python-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black kubernetes PyYAML
+
+      - name: Syntax validation
+        run: |
+          python -m py_compile nessie/nessie.py
+          echo "Syntax validation passed"
+
+      - name: Check code formatting
+        run: |
+          black nessie/nessie.py --check --line-length=120 || {
+            echo "Code formatting issues detected"
+            exit 1
+          }
+          echo "Code formatting check passed"
+
+      - name: Verify imports
+        run: |
+          python -c "
+          import os, yaml, time, logging, shutil, tarfile, subprocess
+          from datetime import datetime, timedelta
+          from kubernetes import client, config
+          from pathlib import Path
+          print('All imports verified successfully')
+          "
