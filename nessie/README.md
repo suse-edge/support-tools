@@ -10,8 +10,10 @@ Nessie collects a wide range of diagnostic information:
 * 🛳️ Kubernetes pod logs from all or selected namespaces
 * ⚙️ Kubernetes configuration data and Helm releases
 * 📊 Node metrics and performance data
-* 🏷️ Version information of key components
+* 🏷️ Version information of key components (including SR-IOV, KubeVirt, and CDI)
 * 📝 Metal3 logs for bare metal provisioning
+* ⏱️ PTP logs for precision time protocol services (ptp4l, phc2sys)
+* 📁 Host filesystem logs (e.g., libvirt/qemu VM logs from `/var/log/libvirt/qemu`)
 
 All collected data is organized in a structured directory layout and compressed into a single archive for easy sharing with support engineers.
 
@@ -45,6 +47,7 @@ podman run --privileged \
   -v /var/log/journal:/var/log/journal:ro \
   -v /run/systemd:/run/systemd:ro \
   -v /etc/machine-id:/etc/machine-id:ro \
+  -v /var/log/libvirt/qemu:/var/log/libvirt/qemu:ro \
   -v /tmp/nessie-logs:/tmp/cluster-logs \
   ghcr.io/gagrio/nessie
 ```
@@ -69,6 +72,7 @@ Nessie can be configured through environment variables, making it highly customi
 | `NESSIE_SKIP_K8S_CONFIGS` | `false` | Skip collecting Kubernetes configurations if set to true |
 | `NESSIE_SKIP_METRICS` | `false` | Skip collecting node metrics if set to true |
 | `NESSIE_SKIP_VERSIONS` | `false` | Skip collecting version information if set to true |
+| `NESSIE_SKIP_HOST_FILE_LOGS` | `false` | Skip collecting host filesystem logs if set to true |
 | `KUBECONFIG` | Auto-detected | Path to Kubernetes configuration file |
 
 ## 📂 Output Format
@@ -80,6 +84,9 @@ nessie_logs_YYYY-MM-DD_HH-MM-SS/
 ├── node/                # Host system logs
 │   ├── system.log
 │   ├── combustion.log
+│   ├── libvirt-qemu/    # VM logs from /var/log/libvirt/qemu
+│   │   ├── vm1.log
+│   │   └── ...
 │   └── ...
 ├── pods/                # Kubernetes pod logs
 │   ├── namespace1/
@@ -89,6 +96,9 @@ nessie_logs_YYYY-MM-DD_HH-MM-SS/
 ├── configs/             # Kubernetes configuration
 │   ├── namespaces.txt
 │   ├── helm_releases.yaml
+│   ├── metal3.log
+│   ├── ptp4l.log
+│   ├── phc2sys.log
 │   └── ...
 ├── metrics/             # Performance metrics
 │   └── node_metrics.yaml
@@ -122,6 +132,17 @@ podman run --privileged \
   ghcr.io/gagrio/nessie
 ```
 
+### Collection with VM Logs on Hypervisors
+
+```bash
+podman run --privileged \
+  -v /var/log/journal:/var/log/journal:ro \
+  -v /etc/rancher/k3s/k3s.yaml:/etc/rancher/k3s/k3s.yaml:ro \
+  -v /var/log/libvirt/qemu:/var/log/libvirt/qemu:ro \
+  -v /tmp/nessie-output:/tmp/cluster-logs \
+  ghcr.io/gagrio/nessie
+```
+
 ### Focused Collection for App Troubleshooting
 
 ```bash
@@ -150,15 +171,38 @@ podman run --privileged \
 
 Nessie requires:
 
-* Python 3.12 or newer with the `kubernetes` package
+* Python 3.6 or newer with the `kubernetes` package
 * Access to the Kubernetes API (via kubeconfig)
-* Access to system/node as it needs to gather system logs (when running in a container, requires `--privileged`)
+* Access to system logs (when running in a container, requires `--privileged`)
 
 ## 🔒 Security Notes
 
 * The container requires privileged access to read system logs
 * When sharing logs with support, ensure no sensitive information is included
 * For secure environments, review the collected data before sharing
+
+## 🚢 Releasing
+
+Nessie uses a manual release workflow via GitHub Actions.
+
+To create a new release:
+
+1. Go to **Actions** → **Nessie: Release** → **Run workflow**
+2. Enter the version number in semver format (e.g., `1.1.0`)
+3. The workflow will:
+   * Run Python code checks
+   * Validate the version format and ensure the tag doesn't already exist
+   * Create a GitHub Release with tag `nessie-v<version>` and auto-generated release notes
+   * Build and push a multi-arch container image to `ghcr.io/<org>/nessie:<version>` and `:latest`
+
+### Container Image Tags
+
+| When | Image Tags |
+|------|------------|
+| Release `1.1.0` triggered | `ghcr.io/<org>/nessie:1.1.0`, `ghcr.io/<org>/nessie:latest` |
+| Release `1.2.0` triggered | `ghcr.io/<org>/nessie:1.2.0`, `ghcr.io/<org>/nessie:latest` |
+
+The `:latest` tag always points to the most recent release.
 
 ## 🤝 Contributing
 
